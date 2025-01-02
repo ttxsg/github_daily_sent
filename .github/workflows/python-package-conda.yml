@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 deep-translator smtplib
+        pip install requests beautifulsoup4 deep-translator yagmail PyEmail
 
     - name: Run the script
       env:
