@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 translator = GoogleTranslator(source='en', target='zh-CN')
 
 # 定义 URL
-URL = "https://github.com/trending?since=weekly"
+URL = "https://github.com/trending?since=daily"
 
 # 发送 HTTP GET 请求
 response = requests.get(URL)
