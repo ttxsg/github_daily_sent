@@ -87,7 +87,7 @@ if response.status_code == 200:
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = recipient_email
-    message["Subject"] = "每周 GitHub Trending 仓库"
+    message["Subject"] = "每日 GitHub Trending 仓库"
 
     # 附加文本内容
     message.attach(MIMEText(email_content, "plain", "utf-8"))
