@@ -30,3 +30,4 @@ jobs:
         RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
       run: |
         python send_github_trending.py
+        send_moons_trends.py
