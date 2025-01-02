@@ -2,8 +2,8 @@ name: Send GitHub Trending Repositories Daily
 
 on:
   schedule:
-    # 每天的凌晨 0 点 (UTC)，你可以根据需要修改时间
-    - cron: '0 0 * * *'
+    # 每天的凌晨 0:15 UTC，相当于北京时间的 8:15
+    - cron: '15 0 * * *'
   workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
@@ -23,11 +23,25 @@ jobs:
       run: |
         pip install requests beautifulsoup4 deep-translator yagmail PyEmail
 
-    - name: Run the script
+    - name: Debug file existence
+      run: |
+        echo "Checking if send_moons_trends.py exists"
+        ls -la  # 查看当前目录下的文件，确保 send_moons_trends.py 存在
+
+    - name: Run the GitHub trending script
       env:
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
         SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
         RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
       run: |
+        echo "Running send_github_trending.py"
         python send_github_trending.py
-        send_moons_trends.py
+
+    - name: Run the Moons trends script
+      env:
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+        SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+        RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+      run: |
+        echo "Running send_moons_trends.py"
+        python send_moons_trends.py  # 确保路径正确，或者指定绝对路径
