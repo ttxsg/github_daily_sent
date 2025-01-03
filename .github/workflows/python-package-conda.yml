@@ -1,9 +1,10 @@
 name: Send GitHub Trending Repositories Daily
 
 on:
+  push:
   schedule:
     # 每天的凌晨 0:15 UTC，相当于北京时间的 8:15
-    - cron: '1 1 * * *'
+    - cron: '8 1 * * *'
   workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
