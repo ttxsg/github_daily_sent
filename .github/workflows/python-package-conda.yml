@@ -1,9 +1,8 @@
 name: Send GitHub Trending Repositories Daily
 
 on:
-   workflow_dispatch:
    schedule:
-    - cron: "25 1 * * *"
+    - cron: "29 1 * * *"
  
 
 jobs:
