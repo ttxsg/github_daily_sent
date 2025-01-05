@@ -160,10 +160,16 @@ if response.status_code == 200:
         email_content += f'⭐ 本周的收藏量: {repo["stars"]}\n'
 
         owner, repop = extract_owner_repo(repo["repo_url"])
+        response = requests.get(repo["repo_url"])
+        if response.status_code == 200:
+            data = response.json()
+            default_branch=data.get('default_branch', 'main')  # 如果没有返回默认分支，则使用 'main'
+            
+        # readme_url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md"
         if owner and repop:
             print(f"提取到的 owner: {owner}, repo: {repop}")
             # readme_content = get_github_readme(owner, repop)
-            url = f"https://github.com/{owner}/{repo}/blob/main/README.md"  # 使用 raw 来获取原始 Markdown 文件
+            url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md" main # 使用 raw 来获取原始 Markdown 文件
             # 调用异步函数生成总结
             summary = asyncio.run(generate_summary(url))
         
