@@ -190,7 +190,7 @@ if response.status_code == 200:
         email_content += f'🔗 地址: {repo["repo_url"]}\n'
         email_content += f'📝 描述: {repo["description"]}\n'
         email_content += f'💻 使用的语言: {repo["language"]}\n'
-        email_content += f'⭐ 本周的收藏量: {repo["stars"]}\n'
+        email_content += f'⭐ 总的收藏量: {repo["stars"]}\n'
 
         owner, repop = extract_owner_repo(repo["repo_url"])
         
@@ -216,7 +216,7 @@ if response.status_code == 200:
          # 通过 Google Gemini 模型生成总结
          
           
-        email_content += f'⭐ README 内容: {summary}\n'
+        email_content += f'{summary}\n'
         # email_content += f'⭐ 图片地址: {image_links}\n'
         email_content += '\n'
         
