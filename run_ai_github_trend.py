@@ -120,6 +120,11 @@ async def generate_summary(url: str, retries=10, delay=6):
 # 创建翻译器实例
 translator = GoogleTranslator(source='en', target='zh-CN')
 
+# 从环境变量中读取邮件配置
+sender_email = os.getenv("SENDER_EMAIL")
+sender_password = os.getenv("SENDER_PASSWORD")
+recipient_email = os.getenv("RECIPIENT_EMAIL")
+
 # 从环境变量中读取 API 密钥
 api_key = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
@@ -221,10 +226,7 @@ if response.status_code == 200:
         email_content += '\n'
         
 
-    # 邮件发送配置
-    sender_email = "386857251@qq.com"  # 使用环境变量
-    sender_password = "qosozmmhfzyybhgi"  # 使用环境变量
-    recipient_email = "zhengxinlilili@gmail.com"  # 使用环境变量
+ 
 
     # 创建邮件对象
     message = MIMEMultipart()
