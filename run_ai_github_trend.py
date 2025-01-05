@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import google.generativeai as genai
 import os
-
+import re
 # 提取 GitHub URL 中的 owner 和 repo
 def extract_owner_repo(url):
     match = re.match(r'https://github.com/([^/]+)/([^/]+)', url)
