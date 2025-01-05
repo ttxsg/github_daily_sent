@@ -58,6 +58,16 @@ def compress_image(img_data, quality=10):
     except Exception as e:
         print(f"图片压缩失败: {e}")
         return img_data  # 如果压缩失败，返回原始图像数据
+# 获取仓库的默认分支
+def get_default_branch(owner, repo):
+    # 使用 GitHub API 获取仓库信息
+    url = f"https://api.github.com/repos/{owner}/{repo}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('default_branch', 'main')  # 如果没有返回默认分支，则使用 'main'
+    else:
+        raise Exception(f"无法获取仓库信息，状态码: {response.status_code}")
 
 # 定义生成总结的异步函数
 async def generate_summary(url: str):
@@ -160,13 +170,11 @@ if response.status_code == 200:
         email_content += f'⭐ 本周的收藏量: {repo["stars"]}\n'
 
         owner, repop = extract_owner_repo(repo["repo_url"])
-        response = requests.get(repo["repo_url"])
-        if response.status_code == 200:
-            data = response.json()
-            default_branch=data.get('default_branch', 'main')  # 如果没有返回默认分支，则使用 'main'
+        
             
         # readme_url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md"
         if owner and repop:
+            default_branch = get_default_branch(owner, repop)
             print(f"提取到的 owner: {owner}, repo: {repop}")
             # readme_content = get_github_readme(owner, repop)
             url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md" main # 使用 raw 来获取原始 Markdown 文件
