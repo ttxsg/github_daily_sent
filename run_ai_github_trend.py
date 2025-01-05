@@ -86,6 +86,7 @@ def get_default_branch(repo_url):
 async def generate_summary(url: str, retries=4, delay=5):
     attempt = 0
     body = "未找到正文部分"  
+    text_content=''
     while attempt < retries:
         async with AsyncWebCrawler(verbose=True) as crawler:
             result = await crawler.arun(url=url)
@@ -99,21 +100,22 @@ async def generate_summary(url: str, retries=4, delay=5):
 
             if text_content:
                 body = "\n".join(text_content).strip()
+                # 通过 Google Gemini 模型生成总结
+                try:
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍: {body}")
+                    return summary_response.text
+                except Exception as e:
+                    print(f"生成总结时出错: {e}")
+                    return "生成总结时出错"
                 break
             else:
                 print(f"第 {attempt + 1} 次尝试未找到正文内容，等待 {delay} 秒后重试...")
                 attempt += 1
                 await asyncio.sleep(delay)  # 等待指定的时间再重试
-         
-
-        # 通过 Google Gemini 模型生成总结
-        try:
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍: {body}")
-            return summary_response.text
-        except Exception as e:
-            print(f"生成总结时出错: {e}")
-            return "生成总结时出错"
+    if not text_content    
+         return "生成总结时出错"
+        
 
 # 创建翻译器实例
 translator = GoogleTranslator(source='en', target='zh-CN')
