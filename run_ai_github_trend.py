@@ -113,7 +113,7 @@ async def generate_summary(url: str, retries=4, delay=5):
                 print(f"第 {attempt + 1} 次尝试未找到正文内容，等待 {delay} 秒后重试...")
                 attempt += 1
                 await asyncio.sleep(delay)  # 等待指定的时间再重试
-    if not text_content    
+    if not text_content :   
          return "生成总结时出错"
         
 
