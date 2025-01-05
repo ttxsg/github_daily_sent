@@ -95,7 +95,7 @@ async def generate_summary(url: str, retries=10, delay=6):
             raw_markdown = result.markdown_v2.raw_markdown
 
             # 使用正则表达式提取从第一个标题到“36氪经授权发布”之前的所有正文内容
-            text_content = re.findall(r'lines[\s\S]*?([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
+            text_content = re.findall(r'([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
             print(text_content[:6000])  # 打印部分内容来调试
 
             if text_content:
