@@ -83,7 +83,7 @@ def get_default_branch(repo_url):
         
 
 # 定义生成总结的异步函数
-async def generate_summary(url: str, retries=4, delay=5):
+async def generate_summary(url: str, retries=10, delay=6):
     attempt = 0
     body = "未找到正文部分"  
     text_content=''
@@ -96,7 +96,7 @@ async def generate_summary(url: str, retries=4, delay=5):
 
             # 使用正则表达式提取从第一个标题到“36氪经授权发布”之前的所有正文内容
             text_content = re.findall(r'lines[\s\S]*?([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
-            print(text_content[:500])  # 打印部分内容来调试
+            print(text_content[:6000])  # 打印部分内容来调试
 
             if text_content:
                 body = "\n".join(text_content).strip()
@@ -114,7 +114,7 @@ async def generate_summary(url: str, retries=4, delay=5):
                 attempt += 1
                 await asyncio.sleep(delay)  # 等待指定的时间再重试
     if not text_content :   
-         return "生成总结时出错"
+         return "爬取内容出错"
         
 
 # 创建翻译器实例
@@ -199,8 +199,8 @@ if response.status_code == 200:
         if owner and repop:
             default_branch = get_default_branch(repo["repo_url"])
             print(f"提取到的 owner: {owner}, repo: {repop}")
-            url = f'{repo["repo_url"]}/blob/{default_branch}/README.md'  # 使用 raw 来获取原始 Markdown 文件
-
+            # url = f'{repo["repo_url"]}/blob/{default_branch}/README.md'  # 使用 raw 来获取原始 Markdown 文件
+            url = f'{repo["repo_url"]}'  # 使用 raw 来获取原始 Markdown 文件
             print(url)
             # 调用异步函数生成总结
             summary = asyncio.run(generate_summary(url))
