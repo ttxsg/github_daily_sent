@@ -57,7 +57,31 @@ def compress_image(img_data, quality=10):
         print(f"图片压缩失败: {e}")
         return img_data  # 如果压缩失败，返回原始图像数据
 
+# 定义生成总结的异步函数
+async def generate_summary(url: str):
+    async with AsyncWebCrawler(verbose=True) as crawler:
+        result = await crawler.arun(url=url)
 
+        # 假设 `result.markdown_v2.raw_markdown` 是你的原始markdown字符串
+        raw_markdown = result.markdown_v2.raw_markdown
+
+        # 正则表达式提取从第一个标题到“36氪经授权发布”之前的所有正文内容
+        # text_content = re.findall(r'##?.*?([\s\S]+?)(?=36氪经授权发布)', raw_markdown)
+        # text_content = re.findall(r'##?\s?.*?([\s\S]+?)(?=36氪经授权发布|原创出品|(?=##))', raw_markdown)
+        text_content = re.findall(r'lines[\s\S]*?([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
+        if text_content:
+            body = "\n".join(text_content).strip()
+        else:
+            body = "未找到正文部分"
+
+        # 通过 Google Gemini 模型生成总结
+        try:
+            model = genai.GenerativeModel("gemini-1.5-flash")
+            summary_response = model.generate_content(f"用中文总结下面的文章，如果有图片地址，一起保留给我: {body}")
+            return summary_response.text
+        except Exception as e:
+            print(f"生成总结时出错: {e}")
+            return "未能生成总结"
 # 创建翻译器实例
 translator = GoogleTranslator(source='en', target='zh-CN')
 
@@ -136,24 +160,23 @@ if response.status_code == 200:
         owner, repop = extract_owner_repo(repo["repo_url"])
         if owner and repop:
             print(f"提取到的 owner: {owner}, repo: {repop}")
-            readme_content = get_github_readme(owner, repop)
+            # readme_content = get_github_readme(owner, repop)
+            url = f"https://github.com/{owner}/{repo}/blob/main/README.md"  # 使用 raw 来获取原始 Markdown 文件
+            # 调用异步函数生成总结
+            summary = asyncio.run(generate_summary(url))
+        
             # if readme_content:
               
             #     image_links = extract_image_links(readme_content)
             # else:
             #     print("未找到 README 内容")
         else:
+            summary="无法从 URL 中提取 "
             print("无法从 URL 中提取 owner 和 repo")
          # 通过 Google Gemini 模型生成总结
-        try:
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            summary_response = model.generate_content(f"用中文和markdown的格式总结下面的文章，如果文章中存在图片链接也一起保存: {readme_content}")
-            
-        except Exception as e:
-            summary_response=readme_content[:500]
-            print(f"生成总结时出错: {e}") 
+         
           
-        email_content += f'⭐ README 内容: {summary_response}\n'
+        email_content += f'⭐ README 内容: {summary}\n'
         # email_content += f'⭐ 图片地址: {image_links}\n'
         email_content += '\n'
         
