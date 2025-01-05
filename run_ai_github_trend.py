@@ -103,7 +103,7 @@ async def generate_summary(url: str, retries=10, delay=6):
                 # 通过 Google Gemini 模型生成总结
                 try:
                     model = genai.GenerativeModel("gemini-1.5-flash")
-                    summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍: {body}")
+                    summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍出2段话: {body}")
                     return summary_response.text
                 except Exception as e:
                     print(f"生成总结时出错: {e}")
