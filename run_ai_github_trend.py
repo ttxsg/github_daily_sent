@@ -181,11 +181,11 @@ if response.status_code == 200:
     #构建邮件内容
     email_content = ""
     # 根据星标数对列表进行排序（降序）
-    sorted_repositories = sorted(repositories, key=lambda x: x['stars'], reverse=True)
+    # sorted_repositories = sorted(repositories, key=lambda x: x['stars'], reverse=True)
     
     #  response = requests.get(url, verify=False)
 
-    for repo in sorted_repositories:
+    for repo in repositories:
         email_content += f'##📦 项目名称: {repo["repo_name"]}\n'
         email_content += f'🔗 地址: {repo["repo_url"]}\n'
         email_content += f'📝 描述: {repo["description"]}\n'
