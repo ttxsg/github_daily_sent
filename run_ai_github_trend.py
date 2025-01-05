@@ -178,7 +178,8 @@ if response.status_code == 200:
             default_branch = get_default_branch(owner, repop)
             print(f"提取到的 owner: {owner}, repo: {repop}")
             # readme_content = get_github_readme(owner, repop)
-            url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md"  # 使用 raw 来获取原始 Markdown 文件
+            url = f'{repo["repo_url"]}/blob/{default_branch}/README.md'  # 使用 raw 来获取原始 Markdown 文件
+
             print(url)
             # 调用异步函数生成总结
             summary = asyncio.run(generate_summary(url))
