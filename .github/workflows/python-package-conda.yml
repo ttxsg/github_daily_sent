@@ -33,6 +33,7 @@ jobs:
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
         SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
         RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}  # 使用 GitHub Secrets 存储 API 密钥
       run: |
         echo "Running send_github_trending.py"
         python run_ai_github_trend.py
