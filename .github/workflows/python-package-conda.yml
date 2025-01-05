@@ -21,13 +21,17 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 deep-translator yagmail PyEmail google-generativeai
+        pip install requests beautifulsoup4 deep-translator yagmail PyEmail google-generativeai crawl4ai
 
     - name: Debug file existence
       run: |
         echo "Checking if send_moons_trends.py exists"
         ls -la  # 查看当前目录下的文件，确保 send_moons_trends.py 存在
-
+        
+    - name: Install Playwright browsers
+      run: |
+         python -m playwright install  # 安装 Playwright 所需的浏览器
+    
     - name: Run the GitHub trending script
       env:
         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
