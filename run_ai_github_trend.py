@@ -83,31 +83,39 @@ def get_default_branch(repo_url):
         
 
 # 定义生成总结的异步函数
-async def generate_summary(url: str):
-    async with AsyncWebCrawler(verbose=True) as crawler:
-        result = await crawler.arun(url=url)
-        await asyncio.sleep(1)  # 每次请求后延迟一定时间
-        # 假设 `result.markdown_v2.raw_markdown` 是你的原始markdown字符串
-        raw_markdown = result.markdown_v2.raw_markdown
+async def generate_summary(url: str, retries=3, delay=5):
+    attempt = 0
+    while attempt < retries:
+        async with AsyncWebCrawler(verbose=True) as crawler:
+            result = await crawler.arun(url=url)
+            await asyncio.sleep(1)  # 每次请求后延迟一定时间
+            # 假设 `result.markdown_v2.raw_markdown` 是你的原始 markdown 字符串
+            raw_markdown = result.markdown_v2.raw_markdown
 
-        # 正则表达式提取从第一个标题到“36氪经授权发布”之前的所有正文内容
-        # text_content = re.findall(r'##?.*?([\s\S]+?)(?=36氪经授权发布)', raw_markdown)
-        # text_content = re.findall(r'##?\s?.*?([\s\S]+?)(?=36氪经授权发布|原创出品|(?=##))', raw_markdown)
-        text_content = re.findall(r'lines[\s\S]*?([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
-        print(text_content[:500])
-        if text_content:
-            body = "\n".join(text_content).strip()
+            # 使用正则表达式提取从第一个标题到“36氪经授权发布”之前的所有正文内容
+            text_content = re.findall(r'lines[\s\S]*?([\s\S]+?)(?=36氪经授权发布|原创出品|## Footer|\Z)', raw_markdown)
+            print(text_content[:500])  # 打印部分内容来调试
+
+            if text_content:
+                body = "\n".join(text_content).strip()
+                break
+            else:
+                print(f"第 {attempt + 1} 次尝试未找到正文内容，等待 {delay} 秒后重试...")
+                attempt += 1
+                await asyncio.sleep(delay)  # 等待指定的时间再重试
         else:
-            body = "未找到正文部分"
+            # 如果重试次数用完了，还没找到正文部分，返回提示信息
+            body = "未找到正文部分，"
 
         # 通过 Google Gemini 模型生成总结
         try:
             model = genai.GenerativeModel("gemini-1.5-flash")
-            summary_response = model.generate_content(f"用中文总结下面的文章: {body}")
+            summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍: {body}")
             return summary_response.text
         except Exception as e:
             print(f"生成总结时出错: {e}")
-            return "未能生成总结"
+            return "生成总结时出错"
+
 # 创建翻译器实例
 translator = GoogleTranslator(source='en', target='zh-CN')
 
