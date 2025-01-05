@@ -20,9 +20,9 @@ def extract_owner_repo(url):
         return None, None
 
 # 获取 GitHub 仓库的 README 内容（纯文本）
-def get_github_readme(owner, repo):
-    url = f"https://github.com/{owner}/{repo}/blob/main/README.md"  # 使用 raw 来获取原始 Markdown 文件
-    # response = requests.get(url)
+def get_github_readme(url_input):
+    # url = f"https://github.com/{owner}/{repo}/blob/main/README.md"  # 使用 raw 来获取原始 Markdown 文件
+    # response = requests.get(url_input)
     response = requests.get(url, verify=False)
     if response.status_code == 200:
         return response.text  # 直接返回原始的 Markdown 内容
@@ -59,10 +59,10 @@ def compress_image(img_data, quality=10):
         print(f"图片压缩失败: {e}")
         return img_data  # 如果压缩失败，返回原始图像数据
 # 获取仓库的默认分支
-def get_default_branch(owner, repo):
+def get_default_branch(input_url):
     # 使用 GitHub API 获取仓库信息
     url = f"https://api.github.com/repos/{owner}/{repo}"
-    response = requests.get(url)
+    response = requests.get(input_url)
     if response.status_code == 200:
         data = response.json()
         return data.get('default_branch', 'main')  # 如果没有返回默认分支，则使用 'main'
@@ -175,7 +175,7 @@ if response.status_code == 200:
             
         # readme_url = f"https://github.com/{owner}/{repo}/blob/{default_branch}/README.md"
         if owner and repop:
-            default_branch = get_default_branch(owner, repop)
+            default_branch = get_default_branch(repo["repo_url"])
             print(f"提取到的 owner: {owner}, repo: {repop}")
             # readme_content = get_github_readme(owner, repop)
             url = f'{repo["repo_url"]}/blob/{default_branch}/README.md'  # 使用 raw 来获取原始 Markdown 文件
