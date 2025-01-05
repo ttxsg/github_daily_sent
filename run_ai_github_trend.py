@@ -190,7 +190,6 @@ if response.status_code == 200:
         if owner and repop:
             default_branch = get_default_branch(repo["repo_url"])
             print(f"提取到的 owner: {owner}, repo: {repop}")
-            # readme_content = get_github_readme(owner, repop)
             url = f'{repo["repo_url"]}/blob/{default_branch}/README.md'  # 使用 raw 来获取原始 Markdown 文件
 
             print(url)
