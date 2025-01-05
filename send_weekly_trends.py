@@ -5,7 +5,11 @@ from deep_translator import GoogleTranslator
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+import os
+# 从环境变量中读取邮件配置
+sender_email = os.getenv("SENDER_EMAIL")
+sender_password = os.getenv("SENDER_PASSWORD")
+recipient_email = os.getenv("RECIPIENT_EMAIL")
 # 创建翻译器实例
 translator = GoogleTranslator(source='en', target='zh-CN')
 
