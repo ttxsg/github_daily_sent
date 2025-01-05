@@ -86,7 +86,7 @@ def get_default_branch(repo_url):
 async def generate_summary(url: str):
     async with AsyncWebCrawler(verbose=True) as crawler:
         result = await crawler.arun(url=url)
-        await asyncio.sleep(delay)  # 每次请求后延迟一定时间
+        await asyncio.sleep(1)  # 每次请求后延迟一定时间
         # 假设 `result.markdown_v2.raw_markdown` 是你的原始markdown字符串
         raw_markdown = result.markdown_v2.raw_markdown
 
