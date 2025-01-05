@@ -103,9 +103,8 @@ async def generate_summary(url: str, retries=3, delay=5):
                 print(f"第 {attempt + 1} 次尝试未找到正文内容，等待 {delay} 秒后重试...")
                 attempt += 1
                 await asyncio.sleep(delay)  # 等待指定的时间再重试
-        else:
-            # 如果重试次数用完了，还没找到正文部分，返回提示信息
-            body = "未找到正文部分，"
+        if attempt == retries and not text_content:
+            body = "未找到正文部分"
 
         # 通过 Google Gemini 模型生成总结
         try:
