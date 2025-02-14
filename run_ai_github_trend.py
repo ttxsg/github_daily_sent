@@ -103,7 +103,7 @@ async def generate_summary(url: str, retries=10, delay=6):
                 # 通过 Google Gemini 模型生成总结
                 try:
                     model = genai.GenerativeModel("gemini-1.5-flash")
-                    summary_response = model.generate_content(f"你作为Github 优秀分享博主，你对下面这个项目用中文进行总结介绍出2段话: {body}")
+                    summary_response = model.generate_content(f"你作为Github 优秀分享官，你对下面这个项目用中文进行介绍，主要针对它的功能和作用，以及如何部署使用的过程，忽略其协议等无关内容本身的因素: {body}")
                     return summary_response.text
                 except Exception as e:
                     print(f"生成总结时出错: {e}")
@@ -191,7 +191,7 @@ if response.status_code == 200:
     #  response = requests.get(url, verify=False)
 
     for repo in repositories:
-        email_content += f'##📦 项目名称: {repo["repo_name"]}\n'
+        email_content += f'## 📦项目名称: {repo["repo_name"]}\n'
         email_content += f'🔗 地址: {repo["repo_url"]}\n'
         email_content += f'📝 描述: {repo["description"]}\n'
         email_content += f'💻 使用的语言: {repo["language"]}\n'
