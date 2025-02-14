@@ -191,11 +191,12 @@ if response.status_code == 200:
     #  response = requests.get(url, verify=False)
 
     for repo in repositories:
-        email_content +=f"<div style='font-size:24px; color:#2F4F4F; background-color:#e0f7fa; border-radius:3px; padding:1px; display:block; width: 100%; text-align: left;margin: 0;'><b>📦 {repo["repo_name"]}</b></div>"
-        email_content += f"<font style='font-size:16px; color:#FF6347;'>🔗 链接: <a href='{repo["repo_url"]}' target='_blank'>{repo["repo_url"]}</a></font><br>" 
+        email_content += f"<div style='font-size:24px; color:#2F4F4F; background-color:#e0f7fa; border-radius:3px; padding:1px; display:block; width: 100%; text-align: left;margin: 0;'><b>📦 {repo['repo_name']}</b></div>"
+        email_content += f"<font style='font-size:16px; color:#FF6347;'>🔗 链接: <a href='{repo['repo_url']}' target='_blank'>{repo['repo_url']}</a></font><br>"
         email_content += f'💻 使用的语言: {repo["language"]}\n'
         email_content += f'⭐ 总的收藏量: {repo["stars"]}\n'
         email_content += f'📝 {repo["description"]}\n'
+
 
         owner, repop = extract_owner_repo(repo["repo_url"])
         
