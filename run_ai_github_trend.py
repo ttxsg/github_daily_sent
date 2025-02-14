@@ -103,7 +103,7 @@ async def generate_summary(url: str, retries=10, delay=6):
                 # 通过 Google Gemini 模型生成总结
                 try:
                     model = genai.GenerativeModel("gemini-1.5-flash")
-                    summary_response = model.generate_content(f"你作为Github 优秀分享官，你对下面这个项目用中文进行介绍，主要针对它的功能和作用，以及如何部署使用的过程，忽略其协议等无关内容本身的因素: {body}")
+                    summary_response = model.generate_content(f"你作为Github 优秀分享官，你对下面这个项目用中文进行介绍，主要针对它的功能和作用，以及如何部署使用的过程，忽略其协议等无关内容本身的因素，最终给我html格式，其中我不需要标题，重点内容，你可以给颜色样式，我不需要开头的```html 和结尾的```:: {body}")
                     return summary_response.text
                 except Exception as e:
                     print(f"生成总结时出错: {e}")
@@ -191,11 +191,11 @@ if response.status_code == 200:
     #  response = requests.get(url, verify=False)
 
     for repo in repositories:
-        email_content += f'## 📦项目名称: {repo["repo_name"]}\n'
-        email_content += f'🔗 地址: {repo["repo_url"]}\n'
-        email_content += f'📝 描述: {repo["description"]}\n'
+        email_content +=f"<div style='font-size:24px; color:#2F4F4F; background-color:#e0f7fa; border-radius:3px; padding:1px; display:block; width: 100%; text-align: left;margin: 0;'><b>📦 {repo["repo_name"]}</b></div>"
+        email_content += f"<font style='font-size:16px; color:#FF6347;'>🔗 链接: <a href='{repo["repo_url"]}' target='_blank'>{repo["repo_url"]}</a></font><br>" 
         email_content += f'💻 使用的语言: {repo["language"]}\n'
         email_content += f'⭐ 总的收藏量: {repo["stars"]}\n'
+        email_content += f'📝 {repo["description"]}\n'
 
         owner, repop = extract_owner_repo(repo["repo_url"])
         
