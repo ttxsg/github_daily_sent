@@ -195,7 +195,7 @@ if response.status_code == 200:
         email_content += f"<font style='font-size:16px; color:#FF6347;'>🔗 链接: <a href='{repo['repo_url']}' target='_blank'>{repo['repo_url']}</a></font><br>"
         email_content += f'💻 使用的语言: {repo["language"]}\n'
         email_content += f'⭐ 总的收藏量: {repo["stars"]}\n'
-        email_content += f'📝 {repo["description"]}\n'
+        # email_content += f'📝 {repo["description"]}\n'
 
 
         owner, repop = extract_owner_repo(repo["repo_url"])
@@ -222,7 +222,7 @@ if response.status_code == 200:
          # 通过 Google Gemini 模型生成总结
          
           
-        email_content += f'{summary}\n'
+        email_content += f'📝 {summary}\n'
         # email_content += f'⭐ 图片地址: {image_links}\n'
         email_content += '\n'
         
